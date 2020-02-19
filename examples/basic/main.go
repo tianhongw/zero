@@ -1,22 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/trytwice/zero"
 )
 
 func main() {
-	zero := zero.New()
+	app := zero.New()
 
-	zero.GET("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(w, "Hello World!\n")
+	app.GET("/", func(c *zero.Context) {
+		c.String(http.StatusOK, "Hello World!\n")
 	})
 
-	zero.GET("/ping", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(w, "pong\n")
+	app.GET("/hello", func(c *zero.Context) {
+		c.String(http.StatusOK, "Hello %s!\n", c.Query("name"))
 	})
 
-	zero.Run(":8080")
+	app.GET("/query", func(c *zero.Context) {
+		c.JSON(http.StatusOK, zero.H{
+			"name": "tianhongw",
+			"age":  "25",
+		})
+	})
+
+	app.Run(":8080")
 }
