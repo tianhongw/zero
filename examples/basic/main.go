@@ -13,8 +13,8 @@ func main() {
 		c.String(http.StatusOK, "Hello World!\n")
 	})
 
-	app.GET("/hello", func(c *zero.Context) {
-		c.String(http.StatusOK, "Hello %s!\n", c.Query("name"))
+	app.GET("/hello/:name", func(c *zero.Context) {
+		c.String(http.StatusOK, "Hello %s!\n", c.Param("name"))
 	})
 
 	app.GET("/query", func(c *zero.Context) {
