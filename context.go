@@ -13,6 +13,7 @@ type H map[string]interface{}
 type Context struct {
 	Writer  ResponseWriter
 	Request *http.Request
+	Params  map[string]string
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -28,6 +29,11 @@ func (c *Context) FormValue(key string) string {
 
 func (c *Context) Query(key string) string {
 	return c.Request.URL.Query().Get(key)
+}
+
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
 
 func (c *Context) SetHeader(key, value string) {
