@@ -24,5 +24,16 @@ func main() {
 		})
 	})
 
+	v1 := app.Group("v1")
+	{
+		v1.GET("/", func(c *zero.Context) {
+			c.String(http.StatusOK, c.Request.URL.Path)
+		})
+
+		v1.GET("/hello", func(c *zero.Context) {
+			c.String(http.StatusOK, c.Request.URL.Path)
+		})
+	}
+
 	app.Run(":8080")
 }

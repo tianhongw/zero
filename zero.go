@@ -8,14 +8,24 @@ type HandlerFunc func(*Context)
 
 // Engine is the framework's instance
 type Engine struct {
+	*RouterGroup
 	router *router
+	groups []*RouterGroup
 }
 
 // New is the constructor of zero.Engine
 func New() *Engine {
-	return &Engine{
+	engine := &Engine{
 		router: newRouter(),
 	}
+
+	engine.RouterGroup = &RouterGroup{
+		engine: engine,
+	}
+
+	engine.groups = []*RouterGroup{engine.RouterGroup}
+
+	return engine
 }
 
 func (e *Engine) GET(pattern string, handler HandlerFunc) {
