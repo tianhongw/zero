@@ -8,6 +8,8 @@ import (
 
 func main() {
 	app := zero.New()
+	app.Use(zero.Logger())
+	app.Use(zero.Recovery())
 
 	app.GET("/", func(c *zero.Context) {
 		c.String(http.StatusOK, "Hello World!\n")
@@ -31,6 +33,11 @@ func main() {
 		})
 
 		v1.GET("/hello", func(c *zero.Context) {
+			c.String(http.StatusOK, c.Request.URL.Path)
+		})
+		v1.GET("/panic", func(c *zero.Context) {
+			a := make([]int, 1)
+			a[10] = 1
 			c.String(http.StatusOK, c.Request.URL.Path)
 		})
 	}

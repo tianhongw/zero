@@ -2,6 +2,7 @@ package zero
 
 import (
 	"net/http"
+	"strings"
 )
 
 type HandlerFunc func(*Context)
@@ -41,6 +42,15 @@ func (e *Engine) Run(addr string) error {
 }
 
 func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	var middlewares []HandlerFunc
+	for _, group := range e.groups {
+		if strings.HasPrefix(req.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewears...)
+		}
+	}
+
 	c := newContext(w, req)
+	c.handlers = middlewares
+
 	e.router.handle(c)
 }

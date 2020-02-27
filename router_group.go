@@ -35,3 +35,7 @@ func (r *RouterGroup) GET(pattern string, handler HandlerFunc) {
 func (r *RouterGroup) POST(pattern string, handler HandlerFunc) {
 	r.addRoute(http.MethodPost, pattern, handler)
 }
+
+func (r *RouterGroup) Use(middlewares ...HandlerFunc) {
+	r.middlewears = append(r.middlewears, middlewares...)
+}

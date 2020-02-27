@@ -3,6 +3,7 @@ package zero
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 )
 
@@ -14,12 +15,29 @@ type Context struct {
 	Writer  ResponseWriter
 	Request *http.Request
 	Params  map[string]string
+	Path    string
+	Method  string
+
+	// middlewares
+	handlers []HandlerFunc
+	index    int
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
 	return &Context{
 		Writer:  w,
 		Request: req,
+		Path:    req.URL.Path,
+		Method:  req.Method,
+		index:   -1,
+	}
+}
+
+func (c *Context) Next() {
+	c.index++
+
+	for ; c.index < len(c.handlers); c.index++ {
+		c.handlers[c.index](c)
 	}
 }
 
@@ -57,4 +75,13 @@ func (c *Context) JSON(code int, obj interface{}) {
 	if err := encoder.Encode(obj); err != nil {
 		http.Error(c.Writer, err.Error(), 500)
 	}
+}
+
+func (c *Context) Abort() {
+	c.index = math.MaxInt8
+}
+
+func (c *Context) AbortWithStatus(code int) {
+	c.Status(code)
+	c.Abort()
 }
