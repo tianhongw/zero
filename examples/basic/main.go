@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/trytwice/zero"
+	"github.com/tianhongw/zero"
 )
 
 func main() {
