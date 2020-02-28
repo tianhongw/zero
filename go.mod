@@ -1,3 +1,3 @@
-module github.com/trytwice/zero
+module github.com/tianhongw/zero
 
 go 1.13
